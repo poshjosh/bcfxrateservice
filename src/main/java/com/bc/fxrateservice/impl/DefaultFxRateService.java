@@ -20,7 +20,6 @@ import com.bc.fxrateservice.FxRateService;
 import com.bc.fxrateservice.ServiceDescriptor;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author Chinomso Bassey Ikwuagwu on Mar 27, 2018 2:51:27 PM
@@ -36,17 +35,19 @@ public class DefaultFxRateService extends FxRateServiceComposite {
     
     public DefaultFxRateService() {
         super(
-                FxRateService.getAvailable(),         
                 new ServiceDescriptorImpl(
                         "All available Fx Rate Services", 
                         "All available vendors", 
                         versionDate, 
                         "1.0"
-                )
+                ),
+                new FixerFxRateService(),
+                new ECBFxRateService()
         );
     }
 
-    public DefaultFxRateService(List<FxRateService> svcList, ServiceDescriptor descriptor) {
-        super(svcList, descriptor);
+    public DefaultFxRateService(ServiceDescriptor descriptor, 
+            FxRateService preferred, FxRateService... fallbacks) {
+        super(descriptor, preferred, fallbacks);
     }
 }

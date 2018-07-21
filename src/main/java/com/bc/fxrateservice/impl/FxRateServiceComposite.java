@@ -20,6 +20,8 @@ import com.bc.fxrateservice.FxRate;
 import com.bc.fxrateservice.FxRateService;
 import com.bc.fxrateservice.ServiceDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -40,8 +42,14 @@ public class FxRateServiceComposite implements FxRateService {
 
     private FxRateService activeFxRateService;
     
-    public FxRateServiceComposite(List<FxRateService> svcList, ServiceDescriptor descriptor) {
-        this.serviceList = Objects.requireNonNull(svcList);
+    public FxRateServiceComposite(ServiceDescriptor descriptor, 
+            FxRateService preferred, FxRateService... fallbacks) {
+        final List<FxRateService> list = new ArrayList();
+        list.add(preferred);
+        if(fallbacks != null && fallbacks.length > 0) {
+            list.addAll(Arrays.asList(fallbacks));
+        }
+        this.serviceList = Collections.unmodifiableList(list);
         if(serviceList.isEmpty()) {
             throw new IllegalArgumentException();
         }

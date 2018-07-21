@@ -18,7 +18,7 @@ import java.util.Date;
  */
 public interface FxRate extends Serializable {
     
-    FxRate NONE = new FxRateImpl(new Date(), "", "", 0.0f);
+    FxRate NONE = new FxRateImpl(new Date(0), "", "", 0.0f);
     
     String getFromCode();
     String getToCode();

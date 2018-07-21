@@ -31,6 +31,10 @@ public class ServiceDescriptorImpl implements ServiceDescriptor, Serializable {
     private final Date versionDate;
     private final String version;
 
+    public ServiceDescriptorImpl(String name) {
+        this(name, name, new Date(), "1.0");
+    }
+    
     public ServiceDescriptorImpl(String name, String vendor, Date versionDate, String version) {
         this.name = Objects.requireNonNull(name);
         this.vendor = Objects.requireNonNull(vendor);

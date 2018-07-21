@@ -35,6 +35,10 @@ public class ECBFxRateService extends FxRateServiceImpl {
     }
 
     public ECBFxRateService() {
+        this(TimeUnit.HOURS.toMillis(24));
+    }
+    
+    public ECBFxRateService(long updateIntervalMillis) {
         super(
                 new ServiceDescriptorImpl(
                         "European Central Bank FX Rate Service", 
@@ -44,7 +48,7 @@ public class ECBFxRateService extends FxRateServiceImpl {
                 ), 
                 new SingleEndpointSupplier(ENDPOINT), 
                 new ECBUrlParser(), 
-                TimeUnit.HOURS.toMillis(24)
+                updateIntervalMillis
         );
     }
 }

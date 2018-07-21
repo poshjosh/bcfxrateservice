@@ -1,0 +1,39 @@
+https://stackoverflow.com/questions/3139879/how-do-i-get-currency-exchange-rates-via-an-api-such-as-google-finance
+
+http://data.fixer.io/api/latest?access_key=[PUT ACCESS_KEY HERE]
+Fixer offers once a day updates for more than 170 currencies
+
+http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml
+FYI: The European Central Bank offers once a day updates for the following currencies:
+EUR
+USD
+JPY
+BGN
+CZK
+DKK
+GBP
+HUF
+PLN
+RON
+SEK
+CHF
+NOK
+HRK
+RUB
+TRY
+AUD
+BRL
+CAD
+CNY
+HKD
+IDR
+INR
+KRW
+MXN
+MYR
+NZD
+PHP
+SGD
+THB
+ZAR
+ILS

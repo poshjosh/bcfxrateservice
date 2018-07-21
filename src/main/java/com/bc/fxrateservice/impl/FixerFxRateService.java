@@ -36,6 +36,10 @@ public class FixerFxRateService extends FxRateServiceImpl {
     }
 
     public FixerFxRateService() {
+        this(TimeUnit.HOURS.toMillis(24));
+    }
+    
+    public FixerFxRateService(long updateIntervalMillis) {
         super(
                 new ServiceDescriptorImpl(
                         "Fixer FX Rate Service", 
@@ -45,7 +49,7 @@ public class FixerFxRateService extends FxRateServiceImpl {
                 ), 
                 new SingleEndpointSupplier(ENDPOINT), 
                 new FixerUrlParser(), 
-                TimeUnit.HOURS.toMillis(24)
+                updateIntervalMillis
         );
     }
 }
