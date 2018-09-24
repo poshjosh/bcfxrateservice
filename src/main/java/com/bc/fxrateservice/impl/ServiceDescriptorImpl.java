@@ -30,6 +30,7 @@ public class ServiceDescriptorImpl implements ServiceDescriptor, Serializable {
     private final String vendor;
     private final Date versionDate;
     private final String version;
+    private final String id;
 
     public ServiceDescriptorImpl(String name) {
         this(name, name, new Date(), "1.0");
@@ -40,11 +41,14 @@ public class ServiceDescriptorImpl implements ServiceDescriptor, Serializable {
         this.vendor = Objects.requireNonNull(vendor);
         this.versionDate = Objects.requireNonNull(versionDate);
         this.version = Objects.requireNonNull(version);
+        this.id = vendor.replaceAll("\\p{Punct}", "") + '_' + 
+                name.replaceAll("\\p{Punct}", "") + '_' + 
+                version.replaceAll("\\p{Punct}", "");
     }
 
     @Override
     public String getId() {
-        return vendor.replace(' ', '_') + ':' + name.replace(' ', '_') + ':' + version;
+        return id;
     }
 
     @Override
@@ -106,6 +110,6 @@ public class ServiceDescriptorImpl implements ServiceDescriptor, Serializable {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + '{' + this.getId() + '}';
+        return this.getClass().getSimpleName() + '{' + this.id + '}';
     }
 }
