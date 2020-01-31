@@ -55,7 +55,7 @@ public class FixerResponseJson implements FxDataFromBaseCurrency, Serializable {
         this.date = d;
         this.rates = (JSONObject)json.getOrDefault("rates", new JSONObject());
 
-        LOG.info(() -> "Rates:: " + this.rates);
+        LOG.fine(() -> "Rates:: " + this.rates);
     }
     @Override
     public Float getRate(String toCode, Float outputIfNone) {

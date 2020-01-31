@@ -22,7 +22,7 @@ package com.bc.fxrateservice;
  */
 public interface Parser<SOURCE_TYPE> {
 
-    public FxRate parse(String fromCode, String toCode, SOURCE_TYPE source);
+    FxRate parse(String fromCode, String toCode, SOURCE_TYPE source);
 
-    public abstract FxRate[] parse(String[] fromCodes, String[] toCodes, SOURCE_TYPE source);
+    FxRate[] parse(String fromCode, String[] toCodes, SOURCE_TYPE source);
 }

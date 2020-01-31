@@ -32,9 +32,9 @@ import java.util.logging.Logger;
 /**
  * @author Chinomso Bassey Ikwuagwu on Mar 27, 2018 2:13:12 PM
  */
-public class FxRateServiceComposite implements FxRateService {
+public class FxRateServiceWithFallbacks implements FxRateService {
 
-    private static final Logger LOG = Logger.getLogger(FxRateServiceComposite.class.getName());
+    private static final Logger LOG = Logger.getLogger(FxRateServiceWithFallbacks.class.getName());
 
     private final List<FxRateService> serviceList;
     
@@ -42,7 +42,7 @@ public class FxRateServiceComposite implements FxRateService {
 
     private FxRateService activeFxRateService;
     
-    public FxRateServiceComposite(ServiceDescriptor descriptor, 
+    public FxRateServiceWithFallbacks(ServiceDescriptor descriptor, 
             FxRateService preferred, FxRateService... fallbacks) {
         final List<FxRateService> list = new ArrayList();
         list.add(preferred);
@@ -63,13 +63,40 @@ public class FxRateServiceComposite implements FxRateService {
     }
 
     @Override
+    public FxRate[] getRates(Locale fromLocale, Locale[] toLocales) {
+        final FxRate [] result = new FxRate[toLocales.length];
+        for(int i=0; i<toLocales.length; i++) {
+            result[i] = this.getRate(fromLocale, toLocales[i]);
+        }
+        return result;
+    }
+
+    @Override
     public FxRate getRate(Locale fromLocale, Locale toLocale) {
         return (FxRate)this.execute("getRate", new Class[]{Locale.class, Locale.class}, fromLocale, toLocale);
     }
 
     @Override
+    public FxRate[] getRates(String fromCode, String[] toCodes) {
+        final FxRate [] result = new FxRate[toCodes.length];
+        for(int i=0; i<toCodes.length; i++) {
+            result[i] = this.getRate(fromCode, toCodes[i]);
+        }
+        return result;
+    }
+
+    @Override
     public FxRate getRate(String fromCode, String toCode) {
         return (FxRate)this.execute("getRate", new Class[]{String.class, String.class}, fromCode, toCode);
+    }
+
+    @Override
+    public FxRate[] loadRates(String fromCode, String[] toCodes) {
+        final FxRate [] result = new FxRate[toCodes.length];
+        for(int i=0; i<toCodes.length; i++) {
+            result[i] = this.loadRate(fromCode, toCodes[i]);
+        }
+        return result;
     }
 
     @Override

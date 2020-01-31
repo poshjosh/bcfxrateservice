@@ -23,5 +23,5 @@ public interface EndpointSupplier {
 
     public String get(String fromCode, String toCode);
 
-    public abstract String get(String [] fromCodes, String [] toCodes);
+    public abstract String get(String fromCode, String [] toCodes);
 }

@@ -1,7 +1,7 @@
 package com.bc.fxrateservice.impl;
 
 import com.bc.fxrateservice.EndpointSupplier;
-import com.bc.fxrateservice.util.GetUrlContents;
+import com.bc.fxrateservice.util.GetUrlContent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.text.ParseException;
@@ -16,6 +16,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import com.bc.fxrateservice.FxRate;
+import com.bc.fxrateservice.impl.FxRateImpl;
+import com.bc.fxrateservice.impl.FxRateServiceImpl;
+import com.bc.fxrateservice.impl.ServiceDescriptorImpl;
+import java.util.Arrays;
 
 /**
  * @(#)YahooCurrencyrateService.java   20-Oct-2014 09:59:29
@@ -45,10 +49,9 @@ public class YahooFxRateService extends FxRateServiceImpl {
             return this.getUrlPart()+this.getKey(fromCode, toCode)+"=X";
         }
         @Override
-        public String get(String[] fromCodes, String[] toCodes) {
-            if(fromCodes.length != toCodes.length) {
-                throw new IllegalArgumentException();
-            }
+        public String get(String fromCode, String[] toCodes) {
+            final String [] fromCodes = new String[toCodes.length];
+            Arrays.fill(fromCodes, fromCode);
             StringBuilder builder = new StringBuilder();
             builder.append(this.getUrlPart());
             for(int i=0; i<fromCodes.length; i++) {
@@ -73,23 +76,20 @@ public class YahooFxRateService extends FxRateServiceImpl {
     public static class ResponseParserImpl implements Parser<String> {
         
         @Override
-        public FxRate[] parse(String[] fromCodes, String[] toCodes, String url) {
-            if(fromCodes.length != toCodes.length) {
-                throw new IllegalArgumentException();
-            }
+        public FxRate[] parse(String fromCode, String[] toCodes, String url) {
             try(
                     InputStream in = new URL(url).openStream();
                     InputStreamReader r = new InputStreamReader(in, "utf-8");
-                    BufferedReader br = new BufferedReader(r)
-            ){
-                FxRate [] rates = new FxRate[fromCodes.length];
+                    BufferedReader br = new BufferedReader(r)){
+                
+                FxRate [] rates = new FxRate[toCodes.length];
                 String line;
                 for(int i=0; ((line = br.readLine()) != null); i++) {
                     line = line.trim();
                     if(line.isEmpty()) {
                         continue;
                     }
-                    rates[i] = this.parseResponse(fromCodes[i], toCodes[i], line);
+                    rates[i] = this.parseResponse(fromCode, toCodes[i], line);
                 }
                 return rates;
             }catch(IOException e) {
@@ -109,7 +109,7 @@ public class YahooFxRateService extends FxRateServiceImpl {
     //4.7470,"12/28/2015","1:15pm"
     //0.0002,"12/28/2015","1:15pm"
     
-            final String rawResponse = new GetUrlContents().apply(url);
+            final String rawResponse = new GetUrlContent().apply(url, null);
             
             return this.parseResponse(fromCode, toCode, rawResponse);
         }    

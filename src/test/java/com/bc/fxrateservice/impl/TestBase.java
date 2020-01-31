@@ -16,15 +16,20 @@
 
 package com.bc.fxrateservice.impl;
 
-import java.util.concurrent.TimeUnit;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.LogManager;
 
 /**
- * @author Chinomso Bassey Ikwuagwu on Mar 21, 2018 9:37:32 PM
+ * @author Chinomso Bassey Ikwuagwu on Nov 4, 2018 10:16:45 PM
  */
-public class ECBUrlParser extends UrlParserImpl {
-
-    public ECBUrlParser() {
-
-        super((response) -> new ECBResponseXml(response), TimeUnit.HOURS.toMillis(24));
+public class TestBase {
+    static{
+        final ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        try(InputStream in = cl.getResourceAsStream("META-INF/logging.properties")) {
+            LogManager.getLogManager().readConfiguration(in);
+        }catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -18,13 +18,15 @@ package com.bc.fxrateservice.impl;
 
 import com.bc.fxrateservice.FxRateService;
 import com.bc.fxrateservice.ServiceDescriptor;
+import com.bc.fxrateservice.util.GetUrlContent;
+import com.bc.fxrateservice.util.UrlReader;
 import java.util.Calendar;
 import java.util.Date;
 
 /**
  * @author Chinomso Bassey Ikwuagwu on Mar 27, 2018 2:51:27 PM
  */
-public class DefaultFxRateService extends FxRateServiceComposite {
+public class DefaultFxRateService extends FxRateServiceWithFallbacks {
 
     private static final Date versionDate;
     static{
@@ -32,8 +34,16 @@ public class DefaultFxRateService extends FxRateServiceComposite {
         cal.set(2018, 2, 27, 14, 50, 0);
         versionDate = cal.getTime();
     }
-    
+
     public DefaultFxRateService() {
+        this(FxRateServiceImpl.DEFAULT_UPDATE_INTERVAL_MILLIS);
+    }
+    
+    public DefaultFxRateService(long updateIntervalMillis) {
+        this(new GetUrlContent(), updateIntervalMillis);
+    }
+    
+    public DefaultFxRateService(UrlReader urlReader, long updateIntervalMillis) {
         super(
                 new ServiceDescriptorImpl(
                         "All available Fx Rate Services", 
@@ -41,8 +51,8 @@ public class DefaultFxRateService extends FxRateServiceComposite {
                         versionDate, 
                         "1.0"
                 ),
-                new FixerFxRateService(),
-                new ECBFxRateService()
+                new FixerFxRateService(urlReader, updateIntervalMillis),
+                new ECBFxRateService(urlReader, updateIntervalMillis)
         );
     }
 

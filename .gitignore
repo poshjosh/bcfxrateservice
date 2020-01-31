@@ -1,0 +1,6 @@
+/build/
+/dist/
+/build
+/target/
+/src/main/resources/META-INF/
+/src/test/resources/META-INF/

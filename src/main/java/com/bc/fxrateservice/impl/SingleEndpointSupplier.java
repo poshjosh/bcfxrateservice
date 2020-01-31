@@ -40,8 +40,9 @@ public class SingleEndpointSupplier implements EndpointSupplier, Serializable {
     public String get(String fromCode, String toCode) {
         return endpoint;
     }
+    
     @Override
-    public String get(String[] fromCodes, String[] toCodes) {
+    public String get(String fromCode, String[] toCodes) {
         return endpoint;
     }
 }

@@ -22,28 +22,28 @@ import java.util.function.Function;
 import java.util.logging.Logger;
 import com.bc.fxrateservice.FxDataFromBaseCurrency;
 import com.bc.fxrateservice.FxRate;
+import com.bc.fxrateservice.util.GetUrlContent;
+import com.bc.fxrateservice.util.UrlReader;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Chinomso Bassey Ikwuagwu on Mar 22, 2018 8:20:14 PM
  */
 public class UrlParserImpl extends AbstractUrlParser<FxDataFromBaseCurrency> {
     
-    private static final Logger LOG = Logger.getLogger(FixerUrlParser.class.getName());
+    private static final Logger LOG = Logger.getLogger(UrlParserImpl.class.getName());
 
     public static final MathContext MATH_CONTEXT = MathContext.DECIMAL32;
-
-    private final long defaultExpiryPeriod;
-
-    public UrlParserImpl(
-            Function<String, FxDataFromBaseCurrency> converter,
-            long defaultExpiryPeriod) {
-        super(converter);
-        this.defaultExpiryPeriod = defaultExpiryPeriod;
+    
+    public static final long DATA_REFRESH_INTERVAL = TimeUnit.MINUTES.toMillis(60);
+    
+    public UrlParserImpl(Function<String, FxDataFromBaseCurrency> converter) {
+        this(new GetUrlContent(), converter, DATA_REFRESH_INTERVAL);
     }
-
-    @Override
-    public boolean isExpired(FxDataFromBaseCurrency data) {
-        return data == null ? true : System.currentTimeMillis() - data.getDate().getTime() > this.defaultExpiryPeriod;
+    
+    public UrlParserImpl(UrlReader urlReader,
+            Function<String, FxDataFromBaseCurrency> converter, long dataTimeoutMillis) {
+        super(urlReader, converter, dataTimeoutMillis);
     }
 
     @Override
@@ -83,13 +83,9 @@ public class UrlParserImpl extends AbstractUrlParser<FxDataFromBaseCurrency> {
             }
         }
         
-        LOG.fine(() -> output.toString());
+        LOG.finer(() -> output.toString());
 
         return output;
-    }
-
-    public long getDefaultExpiryPeriod() {
-        return defaultExpiryPeriod;
     }
 }
 

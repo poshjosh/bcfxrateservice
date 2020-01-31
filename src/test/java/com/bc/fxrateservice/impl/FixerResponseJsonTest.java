@@ -15,10 +15,10 @@
  */
 package com.bc.fxrateservice.impl;
 
-import com.bc.fxrateservice.util.CharReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,7 +36,7 @@ import static org.junit.Assert.*;
  *
  * @author Josh
  */
-public class FixerResponseJsonTest {
+public class FixerResponseJsonTest extends TestBase {
     
     private static FixerResponseJson instance;
     
@@ -170,8 +170,9 @@ public class FixerResponseJsonTest {
             if(!file.exists()) {
                 throw new FileNotFoundException(file.toString());
             }
-            final String contents = new CharReader().readChars(file).toString();
-            return new FixerResponseJson(contents);
+            final byte [] bytes = Files.readAllBytes(file.toPath());
+            final String contents = bytes == null ? null : new String(bytes);
+            return contents == null ? null : new FixerResponseJson(contents);
         }catch(Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Exception creating instance of: " + FixerResponseJson.class.getName());

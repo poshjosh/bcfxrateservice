@@ -15,7 +15,6 @@
  */
 package com.bc.fxrateservice.impl;
 
-import com.bc.fxrateservice.util.CharReader;
 import com.bc.xml.XmlUtil;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,6 +22,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,7 +40,7 @@ import org.w3c.dom.Node;
  *
  * @author Josh
  */
-public class ECBResponseXmlTest {
+public class ECBResponseXmlTest extends TestBase {
     
     private static ECBResponseXml instance;
     
@@ -133,7 +133,8 @@ public class ECBResponseXmlTest {
             }
             System.out.println(file);
             Objects.requireNonNull(file);
-            final String contents = new CharReader().readChars(file).toString();
+            final byte [] bytes = Files.readAllBytes(file.toPath());
+            final String contents = bytes == null ? null : new String(Files.readAllBytes(file.toPath()));
             System.out.println("Content length: " + (contents == null ? null : contents.length()));
             Objects.requireNonNull(contents);
             return new ECBResponseXml(contents);

@@ -16,9 +16,11 @@
 
 package com.bc.fxrateservice.impl;
 
+import com.bc.fxrateservice.Parser;
+import com.bc.fxrateservice.util.GetUrlContent;
+import com.bc.fxrateservice.util.UrlReader;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Chinomso Bassey Ikwuagwu on Mar 20, 2018 8:54:35 PM
@@ -35,10 +37,21 @@ public class ECBFxRateService extends FxRateServiceImpl {
     }
 
     public ECBFxRateService() {
-        this(TimeUnit.HOURS.toMillis(24));
+        this(new GetUrlContent(), DEFAULT_UPDATE_INTERVAL_MILLIS);
     }
     
     public ECBFxRateService(long updateIntervalMillis) {
+        this(new GetUrlContent(), updateIntervalMillis);
+    }
+    
+    public ECBFxRateService(UrlReader urlReader, long updateIntervalMillis) {
+        this(
+                new UrlParserImpl(urlReader, (response) -> new ECBResponseXml(response), UrlParserImpl.DATA_REFRESH_INTERVAL), 
+                updateIntervalMillis
+        );
+    }
+
+    public ECBFxRateService(Parser<String> parser, long updateIntervalMillis) {
         super(
                 new ServiceDescriptorImpl(
                         "European Central Bank FX Rate Service", 
@@ -47,7 +60,7 @@ public class ECBFxRateService extends FxRateServiceImpl {
                         "1.0"
                 ), 
                 new SingleEndpointSupplier(ENDPOINT), 
-                new ECBUrlParser(), 
+                parser, 
                 updateIntervalMillis
         );
     }

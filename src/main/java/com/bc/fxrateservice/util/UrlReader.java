@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package com.bc.fxrateservice.impl;
+package com.bc.fxrateservice.util;
 
-import java.util.concurrent.TimeUnit;
+import java.io.IOException;
 
 /**
- * @author Chinomso Bassey Ikwuagwu on Mar 21, 2018 9:33:10 PM
+ * @author Chinomso Bassey Ikwuagwu on Nov 16, 2018 6:07:36 PM
  */
-public class FixerUrlParser extends UrlParserImpl {
-    
-    public FixerUrlParser() {
-    
-        super((response) -> new FixerResponseJson(response), TimeUnit.HOURS.toMillis(24));
-    }
-}
+public interface UrlReader {
 
+    String read(String url) throws IOException;
+}
